@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:lunch_app/models/models.dart';
 
 class LunchApiClient {
-  static const baseUrl = 'http://localhost:3000';
+  static const baseUrl = 'http://10.0.15.17:3000';
   final http.Client httpClient;
 
   LunchApiClient({@required this.httpClient}) : assert (httpClient != null);
@@ -35,7 +35,7 @@ class LunchApiClient {
     }
 
     final menusJsonList = jsonDecode(menusResponse.body) as List;
-    final List<Menu> menuList = menusJsonList.map((m) => Menu.fromJson(m));
+    final menuList = menusJsonList.map((m) => Menu.fromJson(m)).toList();
 
     return menuList;
   }
