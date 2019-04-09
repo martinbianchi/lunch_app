@@ -38,6 +38,19 @@ class Order extends Equatable {
       note: json['note']
     );
   }
+
+  Order copyWith({Menu menu, MainCourse mainCourse, Garnish garnish, Location location, Turn turn, User user, DateTime date, String note}){
+    return Order(
+      menu: menu ?? this.menu,
+      mainCourse:  mainCourse ?? this.mainCourse,
+      garnish: garnish ?? this.garnish,
+      location: location ?? this.location,
+      turn: turn ?? this.turn,
+      user: user ?? this.user,
+      date: date ?? this.date,
+      note: note ?? this.note
+    );
+  }
 }
 
 class MainCourse extends Equatable {

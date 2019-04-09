@@ -39,4 +39,46 @@ class LunchApiClient {
 
     return menuList;
   }
+
+  Future<List<Garnish>> getGarnishes() async {
+    final garnishesUrl = '$baseUrl/api/garnish';
+    final garnishResponse = await httpClient.get(garnishesUrl);
+
+    if(garnishResponse.statusCode != 200) {
+      throw Exception('Error getting garnishes');
+    }
+
+    final garnishesJsonList = jsonDecode(garnishResponse.body) as List;
+    final garnishList = garnishesJsonList.map((g) => Garnish.fromJson(g)).toList();
+
+    return garnishList;
+  }
+
+  Future<List<Location>> getLocations() async {
+    final locationsUrl = '$baseUrl/api/location';
+    final locationResponse = await httpClient.get(locationsUrl);
+
+    if(locationResponse.statusCode != 200){
+      throw Exception('Error getting locations');
+    }
+
+    final locationJsonList = jsonDecode(locationResponse.body) as List;
+    final locationList = locationJsonList.map((l) => Location.fromJson(l)).toList();
+
+    return locationList;
+  }
+
+  Future<List<Turn>> getTurns() async {
+    final turnsUrl = '$baseUrl/api/turn';
+    final turnResponse = await httpClient.get(turnsUrl);
+
+    if(turnResponse.statusCode != 200){
+      throw Exception('Error getting turns');
+    }
+
+    final turnsJsonList = jsonDecode(turnResponse.body) as List;
+    final turnsList = turnsJsonList.map((t) => Turn.fromJson(t)).toList();
+
+    return turnsList;
+  }
 }

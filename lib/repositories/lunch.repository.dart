@@ -16,4 +16,16 @@ class LunchRepository {
   Future<List<Menu>> getMenus() async {
     return await lunchApiClient.getMenus();
   }
+
+  Future<List<Garnish>> getGarnishes() async {
+    return await lunchApiClient.getGarnishes();
+  }
+
+  Future<List<Location>> getLocations() async {
+    return await lunchApiClient.getLocations();
+  }
+
+  Future<List<Turn>> getTurns() async {
+    return await lunchApiClient.getTurns();
+  }
 }
