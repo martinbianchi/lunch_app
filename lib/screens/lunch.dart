@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lunch_app/screens/type_menu.dart';
+import 'package:lunch_app/widgets/detail_order.dart';
 import 'package:lunch_app/widgets/garnish_tile.dart';
 import 'package:lunch_app/widgets/location_tile.dart';
 import 'package:lunch_app/widgets/menu_tile.dart';
@@ -211,10 +212,9 @@ class _LunchState extends State<Lunch> {
                     ),
                     onTap: () {
                       _menuBloc.dispatch(SelectTurn(
-                        menu: state.menu,
-                        order: state.order,
-                        turnSelected: state.turns[index]
-                      ));
+                          menu: state.menu,
+                          order: state.order,
+                          turnSelected: state.turns[index]));
                     },
                   );
                 },
@@ -222,16 +222,61 @@ class _LunchState extends State<Lunch> {
             }
 
             if (state is TurnSelected) {
-              return widgFinish.FinishOrder(order: state.order, menuBloc: _menuBloc);
+              return widgFinish.FinishOrder(
+                  order: state.order, menuBloc: _menuBloc);
             }
-            if(state is FinishedOrder) {
-              return Center(child: Text('Orden compeltada'),);
+            if (state is FinishedOrder) {
+              return _renderDetailMenu(state);
             }
-          }); 
+          });
     }
 
     if (currentPage == 2) {
       return Text('Mis pedidos');
     }
+  }
+
+  Widget _renderDetailMenu(FinishedOrder state) {
+    return Stack(
+      children: <Widget>[
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [const Color(0xFFF8C08E), const Color(0xFFFDA65B)],
+            )),
+          ),
+        ),
+        Stack(
+          children: <Widget>[
+            Center(
+              child: Container(
+                alignment: Alignment.center.add(Alignment(1 * 0.75, 0.0)),
+                width: 350.0 * (1 - (((0).abs() * 0.2).clamp(0.0, 1.0))),
+                height:
+                    600.0 * 350.0 * (1 - (((0).abs() * 0.2).clamp(0.0, 1.0))),
+                child: Stack(
+                  children: <Widget>[
+                    ItemCard(
+                      order: state.order,
+                      cardColor: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          const Color(0xFFF8C08E),
+                          const Color(0xFFFDA65B)
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        )
+      ],
+    );
   }
 }

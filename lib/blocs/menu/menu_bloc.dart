@@ -33,26 +33,30 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     }
 
     if (event is SelectType) {
-      Order order = new Order(mainCourse: MainCourse(type: event.typeSelected));
+      Order order = new Order(mainCourse: MainCourse(type: event.typeSelected), menu: event.menu);
       if (event.menu.hasGarnish) {
         final List<Garnish> garnishes = await lunchRepository.getGarnishes();
 
         yield TypeMenuWithGarnishSelected(
             menu: event.menu, order: order, garnishes: garnishes);
-      } else {
+      } else if(event.menu.sauce.length > 0){
         yield TypeMenuSelected(menu: event.menu, order: order);
+      }
+      else{
+        final List<Location> locations = await lunchRepository.getLocations();
+        yield GarnishSelected(menu: event.menu, order: order, locations: locations);
       }
     }
 
     if(event is SelectSauce) {
-      Order order = Order(mainCourse: MainCourse(type: event.order.mainCourse.type, sauce: event.sauceSelected));
+      Order order = Order(mainCourse: MainCourse(type: event.order.mainCourse.type, sauce: event.sauceSelected), menu: event.menu);
       final List<Location> locations = await lunchRepository.getLocations();
 
       yield GarnishSelected(menu: event.menu, order: order, locations: locations);
     }
 
     if(event is SelectGarnish) {
-      Order order = Order(mainCourse: MainCourse(type: event.order.mainCourse.type), garnish: GarnishOrder(garnish: event.garnishSelected));
+      Order order = Order(mainCourse: MainCourse(type: event.order.mainCourse.type), garnish: GarnishOrder(garnish: event.garnishSelected), menu: event.menu);
       final List<Location> locations = await lunchRepository.getLocations();
 
       yield GarnishSelected(menu: event.menu, order: order, locations: locations);

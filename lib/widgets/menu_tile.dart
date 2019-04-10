@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import 'package:lunch_app/models/models.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MenuTile extends StatelessWidget {
   final Menu menu;
@@ -23,11 +24,10 @@ class MenuTile extends StatelessWidget {
           Container(
             margin:
                 EdgeInsets.only(left: 8.0, top: 3.0, bottom: 3.0, right: 12.0),
-            width: 100.0,
-            height: 100.0,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(menu.img)),
-                borderRadius: BorderRadius.circular(40.0)),
+            width: 80.0,
+            height: 80.0,
+
+            child: SvgPicture.asset(menu.img, height: 20.0, width: 20.0,),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
