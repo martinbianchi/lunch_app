@@ -86,3 +86,16 @@ class FinishOrder extends MenuEvent {
       : assert(order != null),
         super([order, description]);
 }
+
+class SelectSalad extends MenuEvent {
+  final Menu menu;
+  final Order order;
+  final List<String> normalIngredients;
+  final String specialIngredient;
+
+  SelectSalad(
+      {@required this.menu, @required this.order, @required this.normalIngredients, this.specialIngredient})
+      : assert(menu != null, order != null),
+        assert(normalIngredients != null),
+        super([menu, order, normalIngredients, specialIngredient]);
+}

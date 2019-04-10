@@ -53,7 +53,8 @@ class ItemCard extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
                           child: Center(
                             child: Text(
-                              "• " + order.mainCourse.type + " •",
+                              "• " + _constructTypeString() + " •",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17.0,
@@ -115,32 +116,6 @@ class ItemCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Column(
-                      //   children: <Widget>[
-                      //     SvgPicture.asset(
-                      //       "assets/images/bicycle.svg",
-                      //       width: 30.0,
-                      //       height: 30.0,
-                      //     ),
-                      //     Padding(
-                      //       padding: EdgeInsets.only(top: 8.0),
-                      //       child: Text('${aliment.bikeTime.toInt()}' + " min"),
-                      //     ),
-                      //   ],
-                      // ),
-                      // Column(
-                      //   children: <Widget>[
-                      //     SvgPicture.asset(
-                      //       "assets/images/swim.svg",
-                      //       width: 30.0,
-                      //       height: 30.0,
-                      //     ),
-                      //     Padding(
-                      //       padding: EdgeInsets.only(top: 8.0),
-                      //       child: Text('${aliment.swimTime.toInt()}' + " min"),
-                      //     ),
-                      //   ],
-                      // ),
                       Column(
                         children: <Widget>[
                           Icon(
@@ -163,8 +138,19 @@ class ItemCard extends StatelessWidget {
     );
   }
 
+  String _constructTypeString() {
+    if(order.mainCourse.ingredients == null){
+      return order.mainCourse.type;
+    }
+    else{
+      return order.mainCourse.ingredients.join(', ');
+      
+    }
+  }
+
   Widget _constructGarnish() {
     if (order.menu.hasGarnish || !(order.mainCourse.sauce == null)) {
+      
       return Column(
         children: <Widget>[
           Padding(
@@ -184,7 +170,8 @@ class ItemCard extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0.0),
             child: Center(
               child: Text(
-                "• " + _constructTypeFoodString() + " •",
+                "• " + _constructDescriptionString() + " •",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 17.0,
@@ -200,7 +187,7 @@ class ItemCard extends StatelessWidget {
     }
   }
 
-  String _constructTypeFoodString() {
+  String _constructDescriptionString() {
     if (order.mainCourse.sauce != null) {
       return order.mainCourse.sauce;
     }

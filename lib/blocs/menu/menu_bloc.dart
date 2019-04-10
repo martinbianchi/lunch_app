@@ -29,58 +29,120 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     }
 
     if (event is SelectMenu) {
-      yield MenuSelected(menu: event.menu);
+      if (event.menu.isSalad) {
+        Order order = new Order(menu: event.menu);
+        final List<Ingredients> ingredients =
+            await lunchRepository.getIngredients();
+        final List<Ingredients> specialIngredients =
+            ingredients.where((x) => x.isSpecial).toList();
+        final List<Ingredients> normalIngredients =
+            ingredients.where((x) => !x.isSpecial).toList();
+
+        yield SaladSelected(
+            menu: event.menu,
+            order: order,
+            ingredients: normalIngredients,
+            specialIngredients: specialIngredients,
+            canSelectSpecial: true,
+            quantity: 5);
+      } else {
+        yield MenuSelected(menu: event.menu);
+      }
     }
 
     if (event is SelectType) {
-      Order order = new Order(mainCourse: MainCourse(type: event.typeSelected), menu: event.menu);
+      Order order = new Order(
+          mainCourse: MainCourse(type: event.typeSelected), menu: event.menu);
       if (event.menu.hasGarnish) {
         final List<Garnish> garnishes = await lunchRepository.getGarnishes();
 
         yield TypeMenuWithGarnishSelected(
             menu: event.menu, order: order, garnishes: garnishes);
-      } else if(event.menu.sauce.length > 0){
+      } else if (event.menu.sauce.length > 0) {
         yield TypeMenuSelected(menu: event.menu, order: order);
-      }
-      else{
+      } else {
         final List<Location> locations = await lunchRepository.getLocations();
-        yield GarnishSelected(menu: event.menu, order: order, locations: locations);
+        yield GarnishSelected(
+            menu: event.menu, order: order, locations: locations);
       }
     }
 
-    if(event is SelectSauce) {
-      Order order = Order(mainCourse: MainCourse(type: event.order.mainCourse.type, sauce: event.sauceSelected), menu: event.menu);
+    if (event is SelectSauce) {
+      Order order = Order(
+          mainCourse: MainCourse(
+              type: event.order.mainCourse.type, sauce: event.sauceSelected),
+          menu: event.menu);
       final List<Location> locations = await lunchRepository.getLocations();
 
-      yield GarnishSelected(menu: event.menu, order: order, locations: locations);
+      yield GarnishSelected(
+          menu: event.menu, order: order, locations: locations);
     }
 
-    if(event is SelectGarnish) {
-      Order order = Order(mainCourse: MainCourse(type: event.order.mainCourse.type), garnish: GarnishOrder(garnish: event.garnishSelected), menu: event.menu);
+    if (event is SelectGarnish) {
+      Order order = Order(
+          mainCourse: MainCourse(type: event.order.mainCourse.type),
+          garnish: GarnishOrder(garnish: event.garnishSelected),
+          menu: event.menu);
       final List<Location> locations = await lunchRepository.getLocations();
+      if (event.garnishSelected.isSalad) {
+        final List<Ingredients> ingredients =
+            await lunchRepository.getIngredients();
+        final List<Ingredients> specialIngredients =
+            ingredients.where((x) => x.isSpecial).toList();
+        final List<Ingredients> normalIngredients =
+            ingredients.where((x) => !x.isSpecial).toList();
 
-      yield GarnishSelected(menu: event.menu, order: order, locations: locations);
+        yield SaladSelected(
+            menu: event.menu,
+            order: order,
+            ingredients: normalIngredients,
+            specialIngredients: specialIngredients,
+            canSelectSpecial: false,
+            quantity: 3);
+      } else {
+        yield GarnishSelected(
+            menu: event.menu, order: order, locations: locations);
+      }
     }
 
-    if(event is SelectLocation) {
+    if (event is SelectLocation) {
       Order order = event.order.copyWith(location: event.locationSelected);
       final List<Turn> turns = await lunchRepository.getTurns();
 
       yield LocationSelected(menu: event.menu, order: order, turns: turns);
     }
 
-    if(event is SelectTurn) {
+    if (event is SelectTurn) {
       Order order = event.order.copyWith(turn: event.turnSelected);
 
       yield TurnSelected(menu: event.menu, order: order);
     }
 
-    if(event is FinishOrder) {
+    if (event is FinishOrder) {
       Order order = event.order.copyWith(note: event.description);
 
       print(order);
 
       yield FinishedOrder(order: order);
+    }
+
+    if (event is SelectSalad) {
+       Order order;
+      
+      if(event.order.mainCourse.type == null){
+      event.normalIngredients.add(event.specialIngredient);
+      final MainCourse mainC = MainCourse(
+          ingredients: event.normalIngredients);
+        order = event.order.copyWith(mainCourse: mainC);
+      }
+      else{
+        order = event.order.copyWith(garnish: GarnishOrder(garnishIngredients: event.normalIngredients, garnish: event.order.garnish.garnish));
+      }
+
+      final List<Location> locations = await lunchRepository.getLocations();
+
+      yield GarnishSelected(
+          menu: event.menu, order: order, locations: locations);
     }
   }
 }

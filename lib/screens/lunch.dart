@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lunch_app/screens/type_menu.dart';
 import 'package:lunch_app/widgets/detail_order.dart';
 import 'package:lunch_app/widgets/garnish_tile.dart';
+import 'package:lunch_app/widgets/ingredients_select.dart';
 import 'package:lunch_app/widgets/location_tile.dart';
 import 'package:lunch_app/widgets/menu_tile.dart';
 
@@ -218,6 +219,18 @@ class _LunchState extends State<Lunch> {
                     },
                   );
                 },
+              );
+            }
+
+            if(state is SaladSelected){
+              return IngredientsSelect(
+                menuBloc: _menuBloc,
+                menu: state.menu,
+                order: state.order,
+                ingredients: state.ingredients,
+                specialIngredients: state.specialIngredients,
+                quantity: state.quantity,
+                canSelectSpecial: state.canSelectSpecial,
               );
             }
 
