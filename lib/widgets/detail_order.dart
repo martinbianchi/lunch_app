@@ -116,16 +116,21 @@ class ItemCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(
-                        children: <Widget>[
-                          Icon(
-                            Icons.receipt,
-                            size: 30.0,
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(top: 8.0),
-                              child: Text('Aclaración')),
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          _showDialog(order.note, context);
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Icon(
+                              Icons.receipt,
+                              size: 30.0,
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(top: 8.0),
+                                child: Text('Aclaración')),
+                          ],
+                        ),
                       ),
                     ],
                   )),
@@ -139,18 +144,15 @@ class ItemCard extends StatelessWidget {
   }
 
   String _constructTypeString() {
-    if(order.mainCourse.ingredients == null){
+    if (order.mainCourse.ingredients == null) {
       return order.mainCourse.type;
-    }
-    else{
+    } else {
       return order.mainCourse.ingredients.join(', ');
-      
     }
   }
 
   Widget _constructGarnish() {
     if (order.menu.hasGarnish || !(order.mainCourse.sauce == null)) {
-      
       return Column(
         children: <Widget>[
           Padding(
@@ -199,5 +201,18 @@ class ItemCard extends StatelessWidget {
         return order.garnish.garnish.name;
       }
     }
+  }
+
+  void _showDialog(String description, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Aclaración'),
+            content: (description == null)
+                ? Text('No realizó ninguna aclaración')
+                : Text(description),
+          );
+        });
   }
 }

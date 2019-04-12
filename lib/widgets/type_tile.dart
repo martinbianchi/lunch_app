@@ -47,4 +47,8 @@ class TypeTile extends StatelessWidget {
       ),
     );
   }
+
+
+
+  
 }

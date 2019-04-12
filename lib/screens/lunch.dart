@@ -77,9 +77,49 @@ class _LunchState extends State<Lunch> {
     super.dispose();
   }
 
+
   _getPage(currentPage) {
     if (currentPage == 0) {
-      return Text('Menu del dia');
+      return Center(
+        child: Container(
+          width: (MediaQuery.of(context).size.width / 2 - 20),
+          child: Card(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.topRight,
+                  child: Checkbox(
+                    key: Key("1"),
+                    onChanged: (bool value) {},
+                    value: false,
+                  ),
+                ),
+                Material(
+                  elevation: 1.0,
+                  borderRadius: BorderRadius.circular(100.0),
+                  child: Padding(
+                    child: Icon(
+                      Icons.restaurant,
+                      size: 80.0,
+                    ),
+                    padding: EdgeInsets.all(15.0),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 15.0),
+                  child: Text('Arvejas',
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      )),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
     if (currentPage == 1) {
@@ -222,7 +262,7 @@ class _LunchState extends State<Lunch> {
               );
             }
 
-            if(state is SaladSelected){
+            if (state is SaladSelected) {
               return IngredientsSelect(
                 menuBloc: _menuBloc,
                 menu: state.menu,
