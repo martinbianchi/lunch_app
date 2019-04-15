@@ -22,12 +22,13 @@ class LocationTile extends StatelessWidget {
         children: <Widget>[
           Container(
             margin:
-                EdgeInsets.only(left: 8.0, top: 3.0, bottom: 3.0, right: 12.0),
+                EdgeInsets.only(left: 8.0, top: 3.0, bottom: 3.0, right: 15.0),
             width: 20.0,
             height: 20.0,
-            decoration: BoxDecoration(
-                color: Colors.orangeAccent,
-                borderRadius: BorderRadius.circular(40.0)),
+              child: Icon(
+                Icons.location_on,
+                color: Colors.redAccent,
+                ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +38,8 @@ class LocationTile extends StatelessWidget {
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 19.0,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5),
               )
             ],
           ),

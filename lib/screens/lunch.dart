@@ -15,6 +15,7 @@ import 'package:lunch_app/repositories/lunch.repository.dart';
 import 'package:lunch_app/blocs/menu/menu.dart';
 
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:lunch_app/widgets/option_grid.dart';
 import 'package:lunch_app/widgets/sauce_tile.dart';
 import 'package:lunch_app/widgets/turn_tile.dart';
 import 'package:lunch_app/widgets/type_tile.dart';
@@ -34,6 +35,7 @@ class Lunch extends StatefulWidget {
 class _LunchState extends State<Lunch> {
   MenuBloc _menuBloc;
   int currentPage = 1;
+  int quantitySelected = 0;
 
   @override
   void initState() {
@@ -77,49 +79,17 @@ class _LunchState extends State<Lunch> {
     super.dispose();
   }
 
-
   _getPage(currentPage) {
     if (currentPage == 0) {
-      return Center(
-        child: Container(
-          width: (MediaQuery.of(context).size.width / 2 - 20),
-          child: Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.topRight,
-                  child: Checkbox(
-                    key: Key("1"),
-                    onChanged: (bool value) {},
-                    value: false,
-                  ),
-                ),
-                Material(
-                  elevation: 1.0,
-                  borderRadius: BorderRadius.circular(100.0),
-                  child: Padding(
-                    child: Icon(
-                      Icons.restaurant,
-                      size: 80.0,
-                    ),
-                    padding: EdgeInsets.all(15.0),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 15.0),
-                  child: Text('Arvejas',
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      )),
-                )
-              ],
+      return GridView.count(
+          crossAxisCount: 2,
+          childAspectRatio: 0.9,
+          children: <Widget>[
+            OptionGrid(
+              title: 'Arveja',
+              icon: Icons.restaurant_menu,
             ),
-          ),
-        ),
-      );
+          ]);
     }
 
     if (currentPage == 1) {
@@ -161,63 +131,111 @@ class _LunchState extends State<Lunch> {
             }
 
             if (state is MenuSelected) {
-              return ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: TypeTile(type: state.menu.type[index]),
-                    onTap: () {
-                      _menuBloc.dispatch(SelectType(
-                          menu: state.menu,
-                          typeSelected: state.menu.type[index].name));
-                    },
-                  );
-                },
-                itemCount: state.menu.type.length,
-              );
+              // return ListView.builder(
+              //   scrollDirection: Axis.vertical,
+              //   shrinkWrap: true,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return GestureDetector(
+              //       child: TypeTile(type: state.menu.type[index]),
+              //       onTap: () {
+              //         _menuBloc.dispatch(SelectType(
+              //             menu: state.menu,
+              //             typeSelected: state.menu.type[index].name));
+              //       },
+              //     );
+              //   },
+              //   itemCount: state.menu.type.length,
+              // );
+
+              return GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.8,
+                  children: List.generate(state.menu.type.length, (index) {
+                    return GestureDetector(
+                      child: OptionGrid(
+                          title: state.menu.type[index].name,
+                          icon: Icons.restaurant),
+                      onTap: () {
+                        _menuBloc.dispatch(SelectType(
+                            menu: state.menu,
+                            typeSelected: state.menu.type[index].name));
+                      },
+                    );
+                  }).toList());
             }
 
             if (state is TypeMenuSelected) {
-              return ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: state.menu.sauce.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: SauceTile(
-                      sauce: state.menu.sauce[index],
-                    ),
-                    onTap: () {
-                      _menuBloc.dispatch(SelectSauce(
-                          menu: state.menu,
-                          order: state.order,
-                          sauceSelected: state.menu.sauce[index].name));
-                    },
-                  );
-                },
-              );
+              // return ListView.builder(
+              //   scrollDirection: Axis.vertical,
+              //   shrinkWrap: true,
+              //   itemCount: state.menu.sauce.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return GestureDetector(
+              //       child: SauceTile(
+              //         sauce: state.menu.sauce[index],
+              //       ),
+              //       onTap: () {
+              //         _menuBloc.dispatch(SelectSauce(
+              //             menu: state.menu,
+              //             order: state.order,
+              //             sauceSelected: state.menu.sauce[index].name));
+              //       },
+              //     );
+              //   },
+              // );
+
+              return GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.8,
+                  children: List.generate(state.menu.type.length, (index) {
+                    return GestureDetector(
+                      child: OptionGrid(
+                          title: state.menu.sauce[index].name, icon: Icons.add),
+                      onTap: () {
+                        _menuBloc.dispatch(SelectSauce(
+                            menu: state.menu,
+                            order: state.order,
+                            sauceSelected: state.menu.sauce[index].name));
+                      },
+                    );
+                  }).toList());
             }
 
             if (state is TypeMenuWithGarnishSelected) {
-              return ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: state.garnishes.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: GarnishTile(
-                      garnish: state.garnishes[index],
-                    ),
-                    onTap: () {
-                      _menuBloc.dispatch(SelectGarnish(
-                          menu: state.menu,
-                          order: state.order,
-                          garnishSelected: state.garnishes[index]));
-                    },
-                  );
-                },
-              );
+              // return ListView.builder(
+              //   scrollDirection: Axis.vertical,
+              //   shrinkWrap: true,
+              //   itemCount: state.garnishes.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return GestureDetector(
+              //       child: GarnishTile(
+              //         garnish: state.garnishes[index],
+              //       ),
+              //       onTap: () {
+              //         _menuBloc.dispatch(SelectGarnish(
+              //             menu: state.menu,
+              //             order: state.order,
+              //             garnishSelected: state.garnishes[index]));
+              //       },
+              //     );
+              //   },
+              // );
+
+              return GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.8,
+                  children: List.generate(state.menu.type.length, (index) {
+                    return GestureDetector(
+                      child: OptionGrid(
+                          title: state.garnishes[index].name, icon: Icons.add),
+                      onTap: () {
+                        _menuBloc.dispatch(SelectGarnish(
+                            menu: state.menu,
+                            order: state.order,
+                            garnishSelected: state.garnishes[index]));
+                      },
+                    );
+                  }).toList());
             }
 
             if (state is GarnishSelected) {
@@ -263,14 +281,63 @@ class _LunchState extends State<Lunch> {
             }
 
             if (state is SaladSelected) {
-              return IngredientsSelect(
-                menuBloc: _menuBloc,
-                menu: state.menu,
-                order: state.order,
-                ingredients: state.ingredients,
-                specialIngredients: state.specialIngredients,
-                quantity: state.quantity,
-                canSelectSpecial: state.canSelectSpecial,
+              // return IngredientsSelect(
+              //   menuBloc: _menuBloc,
+              //   menu: state.menu,
+              //   order: state.order,
+              //   ingredients: state.ingredients,
+              //   specialIngredients: state.specialIngredients,
+              //   quantity: state.quantity,
+              //   canSelectSpecial: state.canSelectSpecial,
+              // );
+
+              _callback(index) {
+                setState(() {
+                  state.ingredients[index] = state.ingredients[index]
+                      .copyWith(selected: !state.ingredients[index].selected);
+                  quantitySelected =
+                      state.ingredients.where((x) => x.selected).length;
+                });
+              }
+
+              return Stack(
+                children: <Widget>[
+                  GridView.count(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.8,
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      children:
+                          List.generate(state.ingredients.length, (index) {
+                        return OptionGrid(
+                            title: state.ingredients[index].name,
+                            icon: Icons.add,
+                            checked: state.ingredients[index].selected,
+                            quantitySelected: quantitySelected,
+                            index: index,
+                            maxQuantity: 3,
+                            callback: _callback);
+                      }).toList()),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          _menuBloc.dispatch(SelectSalad(
+                              menu: state.menu,
+                              order: state.order,
+                              normalIngredients: state.ingredients
+                                  .where((x) => x.selected)
+                                  .map((f) => f.name)
+                                  .toList(),
+                              ));
+                        },
+                        child: Icon(Icons.arrow_forward),
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
 

@@ -20,19 +20,31 @@ class _FinishOrderState extends State<FinishOrder> {
     return Center(
       child: Container(
           margin: EdgeInsets.all(10.0),
-
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          padding: EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                  child: TextFormField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                        labelText: 'Descripción', hintText: 'Con papas'),
-                  ),
-                ),
-              RaisedButton(
-                child: Text('Finalizar pedido'),
+               Container(
+                margin: EdgeInsets.only(bottom:50.0),
+                 child: TextFormField(
+
+                      controller: _descriptionController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                          labelText: 'Aclaración', hintText: 'Con papas'),
+                    ),
+               ),
+              FlatButton(
+
+                child: Text('Finalizar pedido', 
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 17.0),),
+                color: Theme.of(context).primaryColor,
+
+                splashColor: Theme.of(context).primaryColorLight,
+                padding: EdgeInsets.all(15.0),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
                 onPressed: () {
                   widget.menuBloc.dispatch(bloc.FinishOrder(
                       description: _descriptionController.text,

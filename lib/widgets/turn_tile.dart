@@ -25,9 +25,7 @@ class TurnTile extends StatelessWidget {
                 EdgeInsets.only(left: 8.0, top: 3.0, bottom: 3.0, right: 12.0),
             width: 20.0,
             height: 20.0,
-            decoration: BoxDecoration(
-                color: Colors.orangeAccent,
-                borderRadius: BorderRadius.circular(40.0)),
+            child: Icon(Icons.watch_later, color: Theme.of(context).primaryColor,)
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
