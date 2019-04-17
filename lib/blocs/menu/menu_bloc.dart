@@ -33,8 +33,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         Order order = new Order(menu: event.menu);
         final List<Ingredients> ingredients =
             await lunchRepository.getIngredients();
-        final List<Ingredients> specialIngredients =
-            ingredients.where((x) => x.isSpecial).toList();
+
         final List<Ingredients> normalIngredients =
             ingredients.where((x) => !x.isSpecial).toList();
 
@@ -42,7 +41,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
             menu: event.menu,
             order: order,
             ingredients: normalIngredients,
-            specialIngredients: specialIngredients,
             canSelectSpecial: true,
             quantity: 5);
       } else {
@@ -87,8 +85,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       if (event.garnishSelected.isSalad) {
         final List<Ingredients> ingredients =
             await lunchRepository.getIngredients();
-        final List<Ingredients> specialIngredients =
-            ingredients.where((x) => x.isSpecial).toList();
+
         final List<Ingredients> normalIngredients =
             ingredients.where((x) => !x.isSpecial).toList();
 
@@ -96,7 +93,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
             menu: event.menu,
             order: order,
             ingredients: normalIngredients,
-            specialIngredients: specialIngredients,
             canSelectSpecial: false,
             quantity: 3);
       } else {
@@ -127,18 +123,36 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     }
 
     if (event is SelectSalad) {
-       Order order;
-      
-      if(event.order.mainCourse.type == null){
-      event.normalIngredients.add(event.specialIngredient);
-      final MainCourse mainC = MainCourse(
-          ingredients: event.normalIngredients);
-        order = event.order.copyWith(mainCourse: mainC);
-      }
-      else{
-        order = event.order.copyWith(garnish: GarnishOrder(garnishIngredients: event.normalIngredients, garnish: event.order.garnish.garnish));
-      }
+      Order order;
 
+      if (event.order.menu.isSalad) {
+        final MainCourse mainC =
+            MainCourse(ingredients: event.normalIngredients);
+        order = event.order.copyWith(mainCourse: mainC);
+        final List<Ingredients> ingredients =
+            await lunchRepository.getIngredients();
+        final List<Ingredients> specialIngredients =
+            ingredients.where((x) => x.isSpecial).toList();
+        yield NormalIngredientsSelected(
+            menu: event.menu, order: order, ingredients: specialIngredients);
+      } else {
+        order = event.order.copyWith(
+            garnish: GarnishOrder(
+                garnishIngredients: event.normalIngredients,
+                garnish: event.order.garnish.garnish));
+        final List<Location> locations = await lunchRepository.getLocations();
+
+        yield GarnishSelected(
+            menu: event.menu, order: order, locations: locations);
+      }
+    }
+
+    if (event is SpecialIngredientSelect) {
+      event.order.mainCourse.ingredients.add(event.specialIngredient);
+      Order order = event.order.copyWith(
+          mainCourse: MainCourse(
+        ingredients: event.order.mainCourse.ingredients,
+      ));
       final List<Location> locations = await lunchRepository.getLocations();
 
       yield GarnishSelected(

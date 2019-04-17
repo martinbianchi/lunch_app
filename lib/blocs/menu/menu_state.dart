@@ -94,7 +94,6 @@ class SaladSelected extends MenuState {
   final Menu menu;
   final Order order;
   final List<Ingredients> ingredients;
-  final List<Ingredients> specialIngredients;
   final int quantity;
   final bool canSelectSpecial;
 
@@ -102,22 +101,25 @@ class SaladSelected extends MenuState {
       {@required this.menu,
       @required this.order,
       @required this.ingredients,
-      @required this.specialIngredients,
       @required this.quantity,
       @required this.canSelectSpecial})
       : assert(menu != null, order != null),
         assert(ingredients != null),
-        assert(specialIngredients != null),
         assert(canSelectSpecial != null),
         assert(quantity != null),
-        super([
-          menu,
-          order,
-          ingredients,
-          specialIngredients,
-          quantity,
-          canSelectSpecial
-        ]);
+        super([menu, order, ingredients, quantity, canSelectSpecial]);
+}
+
+class NormalIngredientsSelected extends MenuState {
+  final Menu menu;
+  final Order order;
+  final List<Ingredients> ingredients;
+
+  NormalIngredientsSelected(
+      {@required this.menu, @required this.order, @required this.ingredients})
+      : assert(menu != null, order != null),
+        assert(ingredients != null),
+        super([menu, order, ingredients]);
 }
 
 class MenusError extends MenuState {}

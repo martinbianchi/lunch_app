@@ -2,12 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class OptionGrid extends StatelessWidget {
+class IngredientOptionGrid extends StatelessWidget {
   final String title;
   final IconData icon;
+  final bool checked;
+  final int quantitySelected;
+  final Function callback;
+  final int index;
+  final int maxQuantity;
 
-
-  OptionGrid({this.title, this.icon});
+  IngredientOptionGrid({this.title, this.icon, this.checked = false, this.quantitySelected = 0, this.callback, this.index, this.maxQuantity = 1});
 
   Random random = Random();
   final List<Color> colors = [
@@ -26,13 +30,21 @@ class OptionGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width / 2 - 20),
+      
       child: Card(
         color: colors[random.nextInt(colors.length)],
         elevation: 4.0,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Container(
+              alignment: Alignment.topRight,
+              child: Checkbox(
+                key: Key("1"),
+                onChanged: (quantitySelected >= maxQuantity && !checked) ? null : (bool value) {callback(index);},
+                value: checked,
+              ),
+            ),
             Material(
               elevation: 3.0,
               borderRadius: BorderRadius.circular(100.0),

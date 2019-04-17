@@ -99,3 +99,15 @@ class SelectSalad extends MenuEvent {
         assert(normalIngredients != null),
         super([menu, order, normalIngredients, specialIngredient]);
 }
+
+class SpecialIngredientSelect extends MenuEvent {
+  final Menu menu;
+  final Order order;
+  final String specialIngredient;
+
+  SpecialIngredientSelect(
+      {@required this.menu, @required this.order, @required this.specialIngredient})
+      : assert(menu != null, order != null),
+        assert(specialIngredient != null),
+        super([menu, order, specialIngredient]);
+}
