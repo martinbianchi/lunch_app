@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               
               LoginBackground(),
-              SingleChildScrollView(child: LoginUI())
+              SingleChildScrollView(child: LoginUI(loginBloc: _loginBloc))
             ],
           );
         },

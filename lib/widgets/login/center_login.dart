@@ -4,13 +4,18 @@ class CenterLogin extends StatefulWidget {
   final double topRight;
   final double bottomRight;
 
-  CenterLogin(this.topRight, this.bottomRight);
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+
+  CenterLogin(this.topRight, this.bottomRight, @required this.usernameController, @required this.passwordController);
 
   @override
   _CenterLoginState createState() => _CenterLoginState();
 }
 
 class _CenterLoginState extends State<CenterLogin> {
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,14 +33,17 @@ class _CenterLoginState extends State<CenterLogin> {
             padding: EdgeInsets.only(left: 40, right: 20, top: 10, bottom: 10),
             child: Column(
               children: <Widget>[
-                TextField(
+                TextFormField(
+                  controller: widget.usernameController,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Email",
                       hintStyle:
                           TextStyle(color: Color(0xFFE1E1E1), fontSize: 14)),
                 ),
-                TextField(
+                TextFormField(
+                  controller: widget.passwordController,
+                  obscureText: true,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Contraseña",

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:lunch_app/blocs/login/login.dart';
 import 'package:lunch_app/widgets/login/center_login.dart';
 import 'package:lunch_app/widgets/login/round_rect_button.dart';
 
 class LoginUI extends StatelessWidget {
+  final LoginBloc loginBloc;
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  LoginUI({@required this.loginBloc});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height / 2.3),
+          padding:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height / 2.3),
         ),
         Column(
           mainAxisSize: MainAxisSize.min,
@@ -32,7 +39,8 @@ class LoginUI extends StatelessWidget {
                 Stack(
                   alignment: Alignment.bottomRight,
                   children: <Widget>[
-                    CenterLogin(30.0, 0.0),
+                    CenterLogin(
+                        30.0, 0.0, _usernameController, _passwordController),
                     Padding(
                       padding: EdgeInsets.only(right: 50),
                       child: Row(
@@ -44,13 +52,12 @@ class LoginUI extends StatelessWidget {
                                 'Ingresa tu Email y Contraseña para continuar...',
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
-                                    fontSize: 12.0,
-                                    color: Color(0xFFA0A0A0)),
+                                    fontSize: 12.0, color: Color(0xFFA0A0A0)),
                               ),
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(10.0),
+                            padding: EdgeInsets.all(5.0),
                             decoration: ShapeDecoration(
                               shape: CircleBorder(),
                               gradient: LinearGradient(
@@ -61,10 +68,19 @@ class LoginUI extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight),
                             ),
-                            child: Icon(
-                              Icons.forward,
-                              size: 40.0,
-                              color: Colors.white,
+                            child: IconButton(
+                              iconSize: 40.0,
+                              onPressed: () {
+                                loginBloc.dispatch(LoginButtonPressed(
+                                  username: _usernameController.text,
+                                  password: _passwordController.text
+                                ));
+                              },
+                              icon: Icon(
+                                Icons.forward,
+                                // size: 40.0,
+                                color: Colors.white,
+                              ),
                             ),
                           )
                         ],
